@@ -9,7 +9,7 @@
     THIS CODE IS MADE AVAILABLE AS IS, WITHOUT WARRANTY OF ANY KIND. THE ENTIRE
     RISK OF THE USE OR THE RESULTS FROM THE USE OF THIS CODE REMAINS WITH THE USER.
 
-    Version 1.02, December 4th, 2017
+    Version 1.03, January 10th, 2018
 
     .DESCRIPTION
     Retrieve .NET Framework version from one or more computers.
@@ -25,6 +25,7 @@
     1.01    Added reporting on .NET Framework 4.6.1 and 4.7 blockades
     1.02    Added .NET Framework 4.7.1 support
             Changed reporting of blocked NET versions to single property
+    1.03    Added .NET Framework 4.7.2 blockade check
 
     .PARAMETER ComputerName
     One or more computer names to retrieve .NET Framework version of. When omitted, the
@@ -49,6 +50,8 @@ $NETVERSION_462 = 394748
 $NETVERSION_462WS2016 = 394802
 $NETVERSION_47 = 460798
 $NETVERSION_471 = 461308
+
+$NetVersionTags= @('452','46','461','462','47','471','472')
 
 Function Get-NetVersionText( $NetVersion = 0) {
     $NETversions = @{
@@ -112,7 +115,7 @@ ForEach ( $Computer in $ComputerName) {
         $NetVersion = Get-NETVersion $Computer
         If ( $NetVersion -gt 0) {
 	    $Blockade= @()
-	    '452','46','461','462','47','471' | ForEach-Object { 
+	    $NetVersionTags | ForEach-Object { 
                 If( Get-NETVersionBlockade $Computer ('BlockNetFramework{0}' -f $_)) { $Blockade+= $_ } 
             }
             $Props = [ordered]@{
