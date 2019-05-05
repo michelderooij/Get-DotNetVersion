@@ -9,7 +9,7 @@
     THIS CODE IS MADE AVAILABLE AS IS, WITHOUT WARRANTY OF ANY KIND. THE ENTIRE
     RISK OF THE USE OR THE RESULTS FROM THE USE OF THIS CODE REMAINS WITH THE USER.
 
-    Version 1.03, January 10th, 2018
+    Version 1.1, May 5th, 2019
 
     .DESCRIPTION
     Retrieve .NET Framework version from one or more computers.
@@ -26,6 +26,8 @@
     1.02    Added .NET Framework 4.7.1 support
             Changed reporting of blocked NET versions to single property
     1.03    Added .NET Framework 4.7.2 blockade check
+    1.1     Added .NET Framework 4.7.2 support
+            Added .NET Framework 4.8 support
 
     .PARAMETER ComputerName
     One or more computer names to retrieve .NET Framework version of. When omitted, the
@@ -50,17 +52,19 @@ $NETVERSION_462 = 394748
 $NETVERSION_462WS2016 = 394802
 $NETVERSION_47 = 460798
 $NETVERSION_471 = 461308
+$NETVERSION_472 = 461814
+$NETVERSION_48 = 528040
 
-$NetVersionTags= @('452','46','461','462','47','471','472')
+$NetVersionTags= @('452','46','461','462','47','471','472', '48')
 
 Function Get-NetVersionText( $NetVersion = 0) {
     $NETversions = @{
         0 = 'Unknown';
         $NETVERSION_45 = '4.5'; $NETVERSION_451 = '4.5.1'; $NETVERSION_452 = '4.5.2'; $NETVERSION_452KB31467178 = '4.5.2 & KB3146717/3146718';
         $NETVERSION_46 = '4.6'; $NETVERSION_461 = '4.6.1'; $NETVERSION_462 = '4.6.2'; $NETVERSION_462WS2016 = '4.6.2 (WS2016)'; $NETVERSION_47 = '4.7';
-        $NETVERSION_471 = '4.7.1'
+        $NETVERSION_471 = '4.7.1'; $NETVERSION_472 = '4.7.2'; $NETVERSION_48= '4.8'
     }
-    return ($NetVersions.GetEnumerator() | Where {$NetVersion -ge $_.Name} | Sort Name -Descending | Select -First 1).Value
+    return ($NetVersions.GetEnumerator() | Where-Object {$NetVersion -ge $_.Name} | Sort-Object Name -Descending | Select-Object -First 1).Value
 }
 
 Function Get-NETVersionBlockade {
@@ -78,7 +82,7 @@ Function Get-NETVersionBlockade {
             }
         }
         Catch {
-            # Key doesn't exist
+            # Key doesn not exist
         }
     }
     Catch {
